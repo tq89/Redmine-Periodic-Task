@@ -82,6 +82,10 @@ docker-compose.yml           Redmine + SQLite volume, mount repo vào
                              plugins/periodictask.
 provision.sh                 Seed DB dev: migrate, load_default_data, bật module
                              cho project mẫu.
+docs/
+  repo-structure.md          File này.
+  lessons.md                 Bài học giữa các session (§3 CLAUDE.md).
+  redmine-7-compatibility.md Đánh giá tương thích Redmine 7.0, có dẫn nguồn.
 .claude/
   settings.json              Stop hook nhắc cập nhật file này.
   hooks/check-repo-          Script của hook trên. Chỉ nhắc, không chặn.
