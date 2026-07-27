@@ -19,10 +19,8 @@ Hướng dẫn cho Claude Code khi làm việc trong repo này.
 5. **Self-fix bugs.** Gặp bug → đọc log tìm root cause → fix ngay trong cùng
    session. Không báo bug mà không kèm bản vá.
 
-6. **Comment bằng TIẾNG VIỆT (mặc định) cho code mới:** Ruby/Rails (plugin
-   Redmine này), frontend (TS/React), backend (Go/TS), Android (Kotlin), Python
-   sidecar. Chuỗi hiển thị cho user vẫn qua i18n (`config/locales/*.yml`), không
-   hard-code.
+6. **Comment bằng TIẾNG VIỆT (mặc định) cho code mới** (Ruby/Rails). Chuỗi hiển
+   thị cho user vẫn qua i18n (`config/locales/*.yml`), không hard-code.
 
 7. **YAGNI.** Chỉ làm đúng cái được yêu cầu ngay bây giờ. Không thêm
    field/option/abstraction/"điểm mở rộng" chưa cần; không generalize/tối ưu
@@ -31,10 +29,9 @@ Hướng dẫn cho Claude Code khi làm việc trong repo này.
 8. **Chức năng mới → đánh giá tổng thể, chờ Quí xác nhận rồi mới code.** Mỗi khi
    Quí yêu cầu thêm một chức năng mới, KHÔNG implement ngay. Trước tiên trình
    bày ngắn gọn (không lan man):
-   - **Tác động tổng thể:** chức năng đụng phần nào của stack/kiến trúc; có khớp
-     ràng buộc BẮT BUỘC §4 (portable-Directus, Obsidian source-of-truth, RAM
-     budget, human-in-the-loop) không; có va quyết định đã chốt §7 /
-     anti-pattern §8 / roadmap + validation gate §6 không.
+   - **Tác động tổng thể:** chức năng đụng phần nào của kiến trúc plugin
+     (model / controller / view / migration / scheduler); có phá tương thích
+     với các bản Redmine đang hỗ trợ không.
    - **Phương án tối ưu (khuyến nghị):** cách đơn giản nhất chạy đúng theo
      YAGNI, kèm đánh đổi và (nếu có) 1–2 phương án loại + lý do loại.
    - **Câu hỏi chốt:** nếu còn điểm mơ hồ ảnh hưởng hướng làm → hỏi thẳng.
