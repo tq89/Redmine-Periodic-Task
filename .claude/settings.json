@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/check-repo-structure-sync.sh\"",
+            "timeout": 10,
+            "statusMessage": "Kiểm tra docs/repo-structure.md"
+          }
+        ]
+      }
+    ]
+  }
+}

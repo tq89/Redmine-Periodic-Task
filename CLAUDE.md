@@ -8,7 +8,9 @@ Hướng dẫn cho Claude Code khi làm việc trong repo này.
   chính, các bẫy tương thích. **Bắt buộc cập nhật trong CÙNG commit** khi thay
   đổi cấu trúc: thêm/xoá/đổi vai trò file, đổi schema (migration), đổi route,
   đổi luồng scheduler. Sửa nội dung bên trong một hàm mà không đổi cấu trúc thì
-  không cần đụng tới.
+  không cần đụng tới. Có Stop hook
+  (`.claude/hooks/check-repo-structure-sync.sh`) nhắc khi quên — chỉ nhắc,
+  không chặn.
 - `docs/lessons.md` — bài học từ các session trước.
 
 ## Quy trình làm việc

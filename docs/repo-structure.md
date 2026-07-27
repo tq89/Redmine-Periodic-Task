@@ -82,6 +82,10 @@ docker-compose.yml           Redmine + SQLite volume, mount repo vào
                              plugins/periodictask.
 provision.sh                 Seed DB dev: migrate, load_default_data, bật module
                              cho project mẫu.
+.claude/
+  settings.json              Stop hook nhắc cập nhật file này.
+  hooks/check-repo-          Script của hook trên. Chỉ nhắc, không chặn.
+    structure-sync.sh
 .rubocop.yml                 Ruby 3.4. Tắt Metrics, Style/Documentation,
                              FrozenStringLiteralComment, Naming/VariableNumber.
                              Exclude db/**/*.
