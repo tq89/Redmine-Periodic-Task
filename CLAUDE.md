@@ -2,6 +2,15 @@
 
 Hướng dẫn cho Claude Code khi làm việc trong repo này.
 
+## Đọc trước khi làm
+
+- `docs/repo-structure.md` — bản đồ toàn repo: cây thư mục, schema, luồng
+  chính, các bẫy tương thích. **Bắt buộc cập nhật trong CÙNG commit** khi thay
+  đổi cấu trúc: thêm/xoá/đổi vai trò file, đổi schema (migration), đổi route,
+  đổi luồng scheduler. Sửa nội dung bên trong một hàm mà không đổi cấu trúc thì
+  không cần đụng tới.
+- `docs/lessons.md` — bài học từ các session trước.
+
 ## Quy trình làm việc
 
 1. **Plan trước, code sau.** Hiểu rõ yêu cầu, lên plan chi tiết trước khi viết
