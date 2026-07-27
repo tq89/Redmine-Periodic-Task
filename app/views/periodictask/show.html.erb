@@ -98,7 +98,10 @@
     <hr />
     <p>
       <strong><%= l(:label_last_error) %></strong>
-      <%= content_tag('span', @periodictask.last_error, class: 'icon icon-error') %>
+<%#  Redmine 7 map error → icon 'warning' (icons_helper.rb#notice_icon); không có
+     icon nào tên 'error' trong sprite. %>
+      <%= content_tag('span', periodictask_sprite_icon('warning', @periodictask.last_error),
+                      class: 'icon icon-error') %>
     </p>
   <% end %>
 

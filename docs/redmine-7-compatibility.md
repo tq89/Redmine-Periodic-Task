@@ -19,6 +19,9 @@ dụng). Xem mục C.
 Redmine 7.0.0 chạy Rails 8.1.3, Ruby `>= 3.2.0, < 4.1.0`
 (`rm7:Gemfile:3,5`; `rm7:doc/INSTALL` liệt kê Ruby 3.2/3.3/3.4/4.0).
 
+> **Cập nhật:** mục A và E đã được xử lý trong cùng nhánh — xem "Trạng thái xử
+> lý" ở cuối file.
+
 ## A. Vấn đề thật: icon biến mất
 
 Redmine 7.0 **đã xoá các class CSS `icon-*` khỏi stylesheet** — CHANGELOG mục
@@ -161,10 +164,45 @@ plugin **không** kích hoạt deprecation nào.
 Plugin **không** dùng thứ nào bị 7.0 xoá: `render_if_exist` (Patch #43321) và
 `addable_watcher_users` (Patch #43429) — grep xác nhận không xuất hiện.
 
-## E. Việc nên làm
+## E. Trạng thái xử lý
 
-1. **Sửa icon** (mục A) — 3 chỗ, chỉ đụng view.
-2. **Thêm `7.0-bookworm` vào ma trận CI** rồi chạy để có bằng chứng thật.
-3. **Cập nhật bảng hỗ trợ phiên bản trong README** sau khi CI xanh — bảng hiện
-   dừng ở cột `6.1`.
-4. (Tuỳ chọn) Dọn code tương thích R5 ở mục B nếu quyết định bỏ 5.1.
+Đã làm:
+
+1. **Sửa icon** (mục A) — 3 view.
+   - `_issue_periodictask_link.html.erb`: span rỗng → `sprite_icon('reload')`,
+     bọc `if respond_to?(:sprite_icon)` để R5.1 vẫn dùng đường CSS cũ. Ở đây
+     **bắt buộc dùng `sprite_icon` chứ không phải helper của plugin**, vì
+     Redmine đặt `config.action_controller.include_all_helpers = false`
+     (`rm7:config/application.rb:73`) nên `PeriodictaskHelper` không có mặt
+     trong view của `IssuesController`; `IconsHelper` thì có, do
+     `ApplicationController` khai báo `helper :icons`
+     (`rm7:app/controllers/application_controller.rb:35`).
+   - `show.html.erb` + `_form.html.erb`: dùng
+     `periodictask_sprite_icon('warning', …)`. **Không dùng tên `'error'`** —
+     sprite 7.0 không có `icon--error`; chính core map `error` → `warning`
+     (`rm7:app/helpers/icons_helper.rb:98-99`).
+2. **Thêm `7.0-bookworm` vào ma trận CI** (`.github/workflows/test.yml`).
+3. **Thêm cột `7.0` vào bảng hỗ trợ phiên bản trong README.**
+
+Chưa làm (chờ quyết định): dọn code tương thích R5 ở mục B — chỉ nên làm nếu bỏ
+hỗ trợ 5.1.
+
+### Mức xác thực của các thay đổi trên
+
+| Đã xác thực | Cách |
+|---|---|
+| Tên icon `reload`, `warning` tồn tại trong sprite 7.0 | grep `id="icon--…"` trong `rm7:app/assets/images/icons.svg` |
+| `sprite_icon` dùng được trong view của IssuesController | `rm7:app/controllers/application_controller.rb:35` (`helper :icons`) |
+| ERB compile được sau khi sửa | erubi 1.13.1 + `RubyVM::InstructionSequence.compile` trên `_issue_periodictask_link.html.erb` và `show.html.erb` → OK |
+| Sửa `_form.html.erb` không làm hỏng cú pháp | erubi báo lỗi **giống hệt nhau** ở bản gốc và bản sửa (dòng 9, `<%= label(…) do %>` — construct mà Rails xử lý qua `BlockAwareEscape`, checker rời không mô phỏng được) |
+| YAML workflow hợp lệ, ma trận đúng 4 bản | `YAML.load_file` |
+| Bảng README cân cột | đếm `<td>` từng hàng: 9 cột phiên bản, 3 hàng nhánh × 10 ô |
+
+**Chưa xác thực:** test suite chưa chạy trên Redmine 7.0 — môi trường phát triển
+không có Docker khả dụng, và GitHub Actions đang tắt trên fork này nên CI cũng
+không chạy. Muốn có bằng chứng thật, chạy:
+
+```bash
+docker build -f Dockerfile.test --build-arg REDMINE_TAG=7.0-bookworm -t periodictask-test .
+docker run --rm periodictask-test
+```

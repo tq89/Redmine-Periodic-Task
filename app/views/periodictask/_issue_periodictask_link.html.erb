@@ -2,7 +2,13 @@
 <% if pi&.periodictask %>
   <% task = pi.periodictask %>
   <p class="periodictask-origin">
-    <span class="icon icon-reload"></span>
+    <%# Redmine 7 đã xoá các class CSS icon-*, nên span rỗng không vẽ gì nữa:
+        icon phải do sprite cung cấp. Giữ lại class cho Redmine 5.1, nơi chưa có
+        sprite_icon và icon vẫn do CSS vẽ. Dùng sprite_icon (IconsHelper, được
+        ApplicationController khai báo `helper :icons`) chứ không dùng helper của
+        plugin, vì Redmine đặt include_all_helpers = false nên helper plugin
+        không có mặt trong view của IssuesController. %>
+    <span class="icon icon-reload"><%= sprite_icon('reload') if respond_to?(:sprite_icon) %></span>
     <%= l(:label_issue_created_by_periodictask) %>
     <% if User.current.allowed_to?(:periodictask, task.project) %>
       <%= link_to "##{task.id}", periodictask_path(project_id: task.project, id: task.id) %>
