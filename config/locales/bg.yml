@@ -37,6 +37,7 @@ bg:
     **DAY** (01-31)
     **WEEK** (00-53)
     **WEEKISO** (01-53)
+    **WEEKISO_YEAR** (YYYY)
     **NEXT_WEEK** (00-53)
     **NEXT_WEEK_YEAR** (YYYY)
     **NEXT_WEEKISO** (01-53)

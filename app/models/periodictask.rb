@@ -165,6 +165,7 @@ class Periodictask < ActiveRecord::Base
       str.gsub!('**NEXT_WEEKISO**', next_week_time.strftime('%V'))
       str.gsub!('**NEXT_WEEK_YEAR**', next_week_time.strftime('%Y'))
       str.gsub!('**NEXT_WEEK**', next_week_time.strftime('%W'))
+      str.gsub!('**WEEKISO_YEAR**', now.strftime('%G'))
       str.gsub!('**WEEKISO**', now.strftime('%V'))
       str.gsub!('**WEEK**', now.strftime('%W'))
       str.gsub!('**QUARTER**', (((now.month - 1) / 3) + 1).to_s)

@@ -577,6 +577,25 @@ class PeriodictasksTest < ActiveSupport::TestCase
     assert_equal 'Week 30 then 31', issue.subject
   end
 
+  # 29/12/2025 đã là tuần ISO 01 của ISO-year 2026 dù năm dương lịch vẫn 2025.
+  def test_macro_weekiso_year_ahead_of_calendar_year
+    issue = macro_issue('W**WEEKISO**/**WEEKISO_YEAR** (calendar **YEAR**)',
+                        Time.utc(2025, 12, 29, 10, 0, 0))
+    assert_equal 'W01/2026 (calendar 2025)', issue.subject
+  end
+
+  # 01/01/2027 vẫn là tuần ISO 53 của ISO-year 2026 dù năm dương lịch đã 2027.
+  def test_macro_weekiso_year_behind_calendar_year
+    issue = macro_issue('W**WEEKISO**/**WEEKISO_YEAR** (calendar **YEAR**)',
+                        Time.utc(2027, 1, 1, 10, 0, 0))
+    assert_equal 'W53/2026 (calendar 2027)', issue.subject
+  end
+
+  def test_macro_weekiso_year_mid_year
+    issue = macro_issue('**WEEKISO_YEAR**', Time.utc(2026, 7, 20, 10, 0, 0))
+    assert_equal '2026', issue.subject
+  end
+
   # 25/12/2026 + 1 tuần = 01/01/2027, vẫn thuộc tuần ISO 53 của ISO-year 2026
   # trong khi năm dương lịch đã là 2027. Đây là chỗ ISO-year và năm dương lịch
   # phân kỳ: ghép **NEXT_WEEKISO** với **NEXT_WEEK_YEAR** sẽ sai một năm.
@@ -609,6 +628,20 @@ class PeriodictasksTest < ActiveSupport::TestCase
     now = Time.utc(2026, 12, 15, 10, 0, 0)
     expected = ['12', '01', '11', '2026', '2027', '2026',
                 now.strftime('%W'), (now + 1.week).strftime('%W'), '2026'].join('|')
+    assert_equal expected, issue.subject
+  end
+
+  # Cả 5 biến họ WEEK phải sống chung, không biến nào ăn mất biến nào.
+  def test_macro_week_family_variants_do_not_clobber
+    now = Time.utc(2026, 12, 25, 10, 0, 0)
+    issue = macro_issue(
+      '**WEEK**|**WEEKISO**|**WEEKISO_YEAR**|**NEXT_WEEK**|**NEXT_WEEK_YEAR**|' \
+      '**NEXT_WEEKISO**|**NEXT_WEEKISO_YEAR**', now
+    )
+    nxt = now + 1.week
+    expected = [now.strftime('%W'), now.strftime('%V'), now.strftime('%G'),
+                nxt.strftime('%W'), nxt.strftime('%Y'),
+                nxt.strftime('%V'), nxt.strftime('%G')].join('|')
     assert_equal expected, issue.subject
   end
 
