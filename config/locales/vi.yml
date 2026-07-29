@@ -1,0 +1,70 @@
+# Vietnamese strings go here for Rails i18n
+# Thuật ngữ bám theo bản dịch tiếng Việt của Redmine core
+# (vấn đề / kiểu vấn đề / mức ưu tiên / người quan sát).
+vi:
+  label_tracker: Kiểu vấn đề
+  label_issue_author: Người tạo vấn đề
+  label_periodictask_configuration: Cấu hình việc định kỳ
+  no_members_in_project: Dự án này chưa có thành viên
+  no_categories_in_project: Dự án này chưa có chủ đề
+  label_subject: Chủ đề
+  label_next_run_date: Lần chạy kế tiếp
+  label_last_run: Lần chạy gần nhất
+  label_edit_periodic_task: Sửa việc định kỳ
+  label_new_periodic_task: Thêm việc định kỳ
+  label_periodic_tasks: Việc định kỳ
+  label_periodic_task: Việc định kỳ
+  label_create_periodic_task: Tạo
+  label_save_periodic_task: Lưu
+  label_scheduled_tasks: Đây là các việc đang được lên lịch
+  label_no_project: Không có mã dự án
+  label_no_periodic_tasks: Chưa có việc định kỳ nào — hãy tạo một việc để bắt đầu.
+  label_remove_periodic_task: xóa việc định kỳ
+  label_interval: Chu kỳ
+  label_set_start_date: Đặt ngày bắt đầu
+  label_set_start_date_info: Khi được chọn, ngày bắt đầu của mỗi vấn đề được tạo sẽ là ngày sinh ra vấn đề đó.
+  label_due_date: 'Đặt hạn chót sau'
+  label_due_date_info: 'Hạn chót của mỗi vấn đề được tạo, tính bằng khoảng thời gian này kể từ ngày bắt đầu của nó.'
+  label_estimated_hours: Thời gian ước lượng
+  label_estimated_hours_after: Giờ
+  label_description: Mô tả
+  label_unit_day: ngày
+  label_unit_business_day: ngày làm việc
+  label_unit_week: tuần
+  label_unit_month: tháng
+  label_unit_year: năm
+  flash_task_created: Đã tạo việc định kỳ
+  flash_task_saved: Đã lưu việc định kỳ
+  flash_task_run_now: 'Đã tạo vấn đề #%{id}'
+  flash_task_run_failed: 'Không tạo được vấn đề: %{error}'
+  button_run_now: Chạy ngay
+  text_run_now_confirm: Tạo ngay một vấn đề từ việc định kỳ này? Lịch chạy sẽ không thay đổi.
+  label_project_missing_or_closed: Dự án không tồn tại hoặc đã đóng
+  subject_variables: |-
+    Các biến có thể dùng:
+    **DAY** (01-31)
+    **WEEK** (00-53)
+    **WEEKISO** (01-53)
+    **MONTH** (01-12)
+    **PREVIOUS_MONTH** (01-12)
+    **QUARTER** (1-4)
+    **YEAR** (YYYY)
+    **MONTHNAME** (tên tháng)
+    **PREVIOUS_MONTHNAME** (tên tháng trước)
+  label_variables_markdown_note: 'Lưu ý: ở phần mô tả, các biến này hiện đậm trong khung xem trước vì ** là cú pháp in đậm của Markdown; chúng sẽ được thay bằng giá trị thật khi vấn đề được tạo.'
+  label_last_error: Lỗi gần nhất
+  label_issue_custom_fields: Trường tùy chỉnh của vấn đề
+  label_priority: Mức ưu tiên
+  label_priority_default: (Mặc định - Bình thường)
+  label_watchers: Người quan sát
+  label_periodictask_template: Mẫu
+  label_periodictask_history: Vấn đề đã tạo
+  label_periodictask_no_history: Việc định kỳ này chưa tạo vấn đề nào
+  label_issue_created_by_periodictask: Được tạo tự động bởi việc định kỳ
+  label_periodictask_plural: Việc định kỳ
+  label_periodictask_journal_create: Đã thêm việc định kỳ
+  label_periodictask_journal_update: Đã cập nhật việc định kỳ
+  label_periodictask_journal_delete: Đã xóa việc định kỳ
+  label_periodictask_journal_run: Đã chạy việc định kỳ
+  label_periodictask_plugin_name: Plugin Việc định kỳ
+  label_periodictask_credit_by: bởi

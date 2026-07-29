@@ -28,6 +28,9 @@ Redmine::Plugin.register :periodictask do
   # the :periodictask permission (see PeriodictaskJournal).
   activity_provider :periodictasks, class_name: 'PeriodictaskJournal'
 
+  # Caption dạng Symbol để nhãn tab đi qua i18n; chuỗi cứng thì mọi ngôn ngữ
+  # đều hiện tiếng Anh (Redmine::MenuManager::MenuItem#caption:
+  # `@caption.is_a?(Symbol) ? l(@caption) : @caption`).
   menu :project_menu, :periodictask, { controller: 'periodictask', action: 'index' },
-       caption: 'Periodic Task', after: :settings, param: :project_id
+       caption: :label_periodic_task, after: :settings, param: :project_id
 end

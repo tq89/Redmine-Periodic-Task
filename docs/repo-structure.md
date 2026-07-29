@@ -24,10 +24,13 @@ Redmine hỗ trợ: 5.1, 6.0, 6.1 (CI chạy đủ 3 bản). Ruby 3.4.
 ```
 init.rb                      Đăng ký plugin: version, project_module,
                              permission :periodictask, activity_provider,
-                             menu project. Require hooks.rb + patch Project.
+                             menu project (caption dùng Symbol để qua i18n).
+                             Require hooks.rb + patch Project.
 config/routes.rb             Route thủ công (dùng match cho update để tương
                              thích cả put lẫn patch).
-config/locales/*.yml         12 ngôn ngữ. en.yml là bản gốc (58 key).
+config/locales/*.yml         13 ngôn ngữ. en.yml là bản gốc (56 khoá);
+                             vi.yml dịch đủ 56, các bản khác còn 49 và
+                             fallback về en.
 
 app/models/
   periodictask.rb            Model chính. Cấu hình chu kỳ + sinh issue.
