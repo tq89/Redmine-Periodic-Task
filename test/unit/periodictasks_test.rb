@@ -571,6 +571,34 @@ class PeriodictasksTest < ActiveSupport::TestCase
     assert_equal 'Week 2026', issue.subject
   end
 
+  def test_macro_next_weekiso
+    now = Time.utc(2026, 7, 20, 10, 0, 0)
+    issue = macro_issue('Week **WEEKISO** then **NEXT_WEEKISO**', now)
+    assert_equal 'Week 30 then 31', issue.subject
+  end
+
+  # 25/12/2026 + 1 tuần = 01/01/2027, vẫn thuộc tuần ISO 53 của ISO-year 2026
+  # trong khi năm dương lịch đã là 2027. Đây là chỗ ISO-year và năm dương lịch
+  # phân kỳ: ghép **NEXT_WEEKISO** với **NEXT_WEEK_YEAR** sẽ sai một năm.
+  def test_macro_next_weekiso_year_diverges_from_calendar_year
+    issue = macro_issue('W**NEXT_WEEKISO**/**NEXT_WEEKISO_YEAR** (calendar **NEXT_WEEK_YEAR**)',
+                        Time.utc(2026, 12, 25, 10, 0, 0))
+    assert_equal 'W53/2026 (calendar 2027)', issue.subject
+  end
+
+  # Chiều ngược lại: 22/12/2025 + 1 tuần = 29/12/2025 — tuần ISO 01 của
+  # ISO-year 2026 dù năm dương lịch vẫn là 2025.
+  def test_macro_next_weekiso_year_ahead_of_calendar_year
+    issue = macro_issue('W**NEXT_WEEKISO**/**NEXT_WEEKISO_YEAR** (calendar **NEXT_WEEK_YEAR**)',
+                        Time.utc(2025, 12, 22, 10, 0, 0))
+    assert_equal 'W01/2026 (calendar 2025)', issue.subject
+  end
+
+  def test_macro_next_weekiso_year_mid_year
+    issue = macro_issue('**NEXT_WEEKISO_YEAR**', Time.utc(2026, 7, 20, 10, 0, 0))
+    assert_equal '2026', issue.subject
+  end
+
   # Biến có hậu tố không được làm hỏng biến gốc cùng họ và ngược lại.
   def test_macro_suffixed_variants_do_not_clobber_base_variables
     issue = macro_issue(

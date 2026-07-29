@@ -152,11 +152,20 @@ class Periodictask < ActiveRecord::Base
       next_month_time = now + 1.month
       next_week_time = now + 1.week
       str.gsub!('**DAY**', now.strftime('%d'))
-      str.gsub!('**WEEKISO**', now.strftime('%V'))
       # Các biến có hậu tố phải thay TRƯỚC biến gốc cùng họ, giữ đúng quy ước
       # sẵn có (WEEKISO trước WEEK, MONTHNAME trước MONTH).
+      #
+      # Hai hệ đánh số tuần KHÔNG dùng chung biến năm:
+      #   **NEXT_WEEK**    dùng %W (tuần theo năm dương lịch) → đi với %Y
+      #   **NEXT_WEEKISO** dùng %V (tuần ISO 8601)            → đi với ISO-year %G
+      # Ghép chéo sẽ sai một năm quanh giao thừa: 25/12/2026 + 1 tuần rơi vào
+      # 01/01/2027 — vẫn là tuần ISO 53 của ISO-year 2026, trong khi %Y đã là
+      # 2027. Chiều ngược lại cũng có: 29/12/2025 là tuần ISO 01 của 2026.
+      str.gsub!('**NEXT_WEEKISO_YEAR**', next_week_time.strftime('%G'))
+      str.gsub!('**NEXT_WEEKISO**', next_week_time.strftime('%V'))
       str.gsub!('**NEXT_WEEK_YEAR**', next_week_time.strftime('%Y'))
       str.gsub!('**NEXT_WEEK**', next_week_time.strftime('%W'))
+      str.gsub!('**WEEKISO**', now.strftime('%V'))
       str.gsub!('**WEEK**', now.strftime('%W'))
       str.gsub!('**QUARTER**', (((now.month - 1) / 3) + 1).to_s)
       str.gsub!('**MONTHNAME**', I18n.localize(now, format: '%B'))

@@ -45,6 +45,8 @@ en:
     **WEEKISO** (01-53)
     **NEXT_WEEK** (00-53)
     **NEXT_WEEK_YEAR** (YYYY)
+    **NEXT_WEEKISO** (01-53)
+    **NEXT_WEEKISO_YEAR** (YYYY)
     **MONTH** (01-12)
     **PREVIOUS_MONTH** (01-12)
     **NEXT_MONTH** (01-12)

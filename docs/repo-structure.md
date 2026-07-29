@@ -30,7 +30,7 @@ config/routes.rb             Route thủ công (dùng match cho update để tư
                              thích cả put lẫn patch).
 config/locales/*.yml         13 ngôn ngữ. en.yml là bản gốc (56 khoá);
                              vi.yml dịch đủ 56, các bản khác còn 49 và
-                             fallback về en. `subject_variables` liệt kê 14
+                             fallback về en. `subject_variables` liệt kê 16
                              biến macro — phải khớp đúng tập macro trong
                              Periodictask#parse_macro.
 
@@ -167,10 +167,15 @@ cộng bù được.
 - **Macro ngày tháng: mốc thời gian phải đi thành cặp.** `**YEAR**` luôn là năm
   của thời điểm chạy, nên ghép nó với `**PREVIOUS_MONTH**` sẽ sai một năm vào
   tháng 1, và với `**NEXT_MONTH**` sẽ sai vào tháng 12. Dùng đúng bạn đồng hành:
-  `**PREVIOUS_MONTH_YEAR**`, `**NEXT_MONTH_YEAR**`, `**NEXT_WEEK_YEAR**`.
-  `**NEXT_WEEK**` dùng `%W` (theo năm dương lịch) nên đi với `%Y`; nếu sau này
-  thêm biến ISO cho tuần thì bạn đồng hành phải là ISO-year `%G`, không phải
-  `%Y`. Thêm macro mới → cập nhật `subject_variables` ở **cả 13** locale.
+  `**PREVIOUS_MONTH_YEAR**`, `**NEXT_MONTH_YEAR**`, `**NEXT_WEEK_YEAR**`,
+  `**NEXT_WEEKISO_YEAR**`.
+  Hai hệ đánh số tuần **không dùng chung biến năm**: `**NEXT_WEEK**` là `%W`
+  (theo năm dương lịch) → đi với `%Y`; `**NEXT_WEEKISO**` là `%V` (ISO 8601) →
+  đi với ISO-year `%G`. Ghép chéo sai một năm quanh giao thừa: 25/12/2026 cộng
+  một tuần rơi vào 01/01/2027 nhưng vẫn là tuần ISO 53 của **2026**.
+  Còn thiếu: `**WEEKISO**` (tuần hiện tại) chưa có bạn đồng hành `%G`, nên ghép
+  nó với `**YEAR**` vẫn sai ở giao thừa.
+  Thêm macro mới → cập nhật `subject_variables` ở **cả 13** locale.
 
 ## Lệnh
 
