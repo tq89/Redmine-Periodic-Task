@@ -126,7 +126,8 @@
   <% if @periodictask.last_error.present? %>
     <p>
       <%= label_tag(nil, l(:label_last_error)) %>
-      <%= content_tag('span', @periodictask.last_error, :class => 'icon icon-error') %>
+      <%= content_tag('span', periodictask_sprite_icon('warning', @periodictask.last_error),
+                      :class => 'icon icon-error') %>
     </p>
   <% end %>
 </fieldset>
