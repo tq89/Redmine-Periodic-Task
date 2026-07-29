@@ -518,6 +518,72 @@ class PeriodictasksTest < ActiveSupport::TestCase
     assert_equal 'Report 12', issue.subject
   end
 
+  def test_macro_next_month
+    issue = macro_issue('Report **NEXT_MONTH**', Time.utc(2026, 3, 1, 10, 0, 0))
+    assert_equal 'Report 04', issue.subject
+  end
+
+  # Tháng 12 phải cuộn sang tháng 01 của năm sau.
+  def test_macro_next_month_on_december
+    issue = macro_issue('Report **NEXT_MONTH**', Time.utc(2026, 12, 15, 10, 0, 0))
+    assert_equal 'Report 01', issue.subject
+  end
+
+  # **YEAR** bám thời điểm chạy nên sẽ ra 2026; **NEXT_MONTH_YEAR** phải ra 2027.
+  def test_macro_next_month_year_on_december
+    issue = macro_issue('Report **NEXT_MONTH**/**NEXT_MONTH_YEAR** (now **YEAR**)',
+                        Time.utc(2026, 12, 15, 10, 0, 0))
+    assert_equal 'Report 01/2027 (now 2026)', issue.subject
+  end
+
+  def test_macro_next_month_year_mid_year
+    issue = macro_issue('Report **NEXT_MONTH_YEAR**', Time.utc(2026, 7, 20, 10, 0, 0))
+    assert_equal 'Report 2026', issue.subject
+  end
+
+  # Đây là lỗi cũ: ghép **PREVIOUS_MONTH** với **YEAR** thì tháng 1 ra sai một
+  # năm. **PREVIOUS_MONTH_YEAR** phải ra 2025.
+  def test_macro_previous_month_year_on_january
+    issue = macro_issue('Report **PREVIOUS_MONTH**/**PREVIOUS_MONTH_YEAR** (now **YEAR**)',
+                        Time.utc(2026, 1, 1, 10, 0, 0))
+    assert_equal 'Report 12/2025 (now 2026)', issue.subject
+  end
+
+  def test_macro_previous_month_year_mid_year
+    issue = macro_issue('Report **PREVIOUS_MONTH_YEAR**', Time.utc(2026, 7, 20, 10, 0, 0))
+    assert_equal 'Report 2026', issue.subject
+  end
+
+  def test_macro_next_week
+    now = Time.utc(2026, 7, 20, 10, 0, 0)
+    issue = macro_issue('Week **WEEK** then **NEXT_WEEK**', now)
+    assert_equal "Week #{now.strftime('%W')} then #{(now + 1.week).strftime('%W')}", issue.subject
+  end
+
+  # Tuần cuối tháng 12 phải cuộn sang năm sau.
+  def test_macro_next_week_year_at_year_end
+    issue = macro_issue('Week **NEXT_WEEK_YEAR**', Time.utc(2026, 12, 28, 10, 0, 0))
+    assert_equal 'Week 2027', issue.subject
+  end
+
+  def test_macro_next_week_year_mid_year
+    issue = macro_issue('Week **NEXT_WEEK_YEAR**', Time.utc(2026, 7, 20, 10, 0, 0))
+    assert_equal 'Week 2026', issue.subject
+  end
+
+  # Biến có hậu tố không được làm hỏng biến gốc cùng họ và ngược lại.
+  def test_macro_suffixed_variants_do_not_clobber_base_variables
+    issue = macro_issue(
+      '**MONTH**|**NEXT_MONTH**|**PREVIOUS_MONTH**|**YEAR**|**NEXT_MONTH_YEAR**|' \
+      '**PREVIOUS_MONTH_YEAR**|**WEEK**|**NEXT_WEEK**|**NEXT_WEEK_YEAR**',
+      Time.utc(2026, 12, 15, 10, 0, 0)
+    )
+    now = Time.utc(2026, 12, 15, 10, 0, 0)
+    expected = ['12', '01', '11', '2026', '2027', '2026',
+                now.strftime('%W'), (now + 1.week).strftime('%W'), '2026'].join('|')
+    assert_equal expected, issue.subject
+  end
+
   def test_macro_substitution_in_description
     now = Time.utc(2026, 7, 20, 10, 0, 0)
     task = Periodictask.create!(
@@ -730,5 +796,22 @@ class PeriodictasksTest < ActiveSupport::TestCase
     task.reload
     assert task.next_run_date > Time.current
     assert_nil task.last_error
+  end
+
+  private
+
+  # Tạo task với +subject+ rồi sinh issue tại mốc +now+, để test macro chỉ còn
+  # phần assert.
+  def macro_issue(subject, now)
+    task = Periodictask.create!(
+      project: @project,
+      tracker_id: 1,
+      author_id: 1,
+      subject: subject,
+      interval_number: 1,
+      interval_units: 'month',
+      next_run_date: now
+    )
+    task.generate_issue(now)
   end
 end

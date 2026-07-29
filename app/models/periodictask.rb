@@ -149,15 +149,28 @@ class Periodictask < ActiveRecord::Base
   def parse_macro(str, now)
     if str.respond_to?(:gsub!) && str.present?
       previous_month_time = now - 1.month
+      next_month_time = now + 1.month
+      next_week_time = now + 1.week
       str.gsub!('**DAY**', now.strftime('%d'))
       str.gsub!('**WEEKISO**', now.strftime('%V'))
+      # Các biến có hậu tố phải thay TRƯỚC biến gốc cùng họ, giữ đúng quy ước
+      # sẵn có (WEEKISO trước WEEK, MONTHNAME trước MONTH).
+      str.gsub!('**NEXT_WEEK_YEAR**', next_week_time.strftime('%Y'))
+      str.gsub!('**NEXT_WEEK**', next_week_time.strftime('%W'))
       str.gsub!('**WEEK**', now.strftime('%W'))
       str.gsub!('**QUARTER**', (((now.month - 1) / 3) + 1).to_s)
       str.gsub!('**MONTHNAME**', I18n.localize(now, format: '%B'))
       str.gsub!('**MONTH**', now.strftime('%m'))
+      # Năm của tháng đã dịch chuyển, KHÔNG phải năm hiện tại: dùng
+      # **PREVIOUS_MONTH**/**PREVIOUS_MONTH_YEAR** thì tháng 1 mới ra đúng năm
+      # trước, và **NEXT_MONTH**/**NEXT_MONTH_YEAR** thì tháng 12 mới ra đúng
+      # năm sau. Ghép với **YEAR** sẽ sai một năm ở hai mốc đó.
+      str.gsub!('**NEXT_MONTH_YEAR**', next_month_time.strftime('%Y'))
+      str.gsub!('**PREVIOUS_MONTH_YEAR**', previous_month_time.strftime('%Y'))
       str.gsub!('**YEAR**', now.strftime('%Y'))
       str.gsub!('**PREVIOUS_MONTHNAME**', I18n.localize(previous_month_time, format: '%B'))
       str.gsub!('**PREVIOUS_MONTH**', previous_month_time.strftime('%m'))
+      str.gsub!('**NEXT_MONTH**', next_month_time.strftime('%m'))
     end
     str
   end

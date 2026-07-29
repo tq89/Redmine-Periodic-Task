@@ -30,7 +30,9 @@ config/routes.rb             Route thủ công (dùng match cho update để tư
                              thích cả put lẫn patch).
 config/locales/*.yml         13 ngôn ngữ. en.yml là bản gốc (56 khoá);
                              vi.yml dịch đủ 56, các bản khác còn 49 và
-                             fallback về en.
+                             fallback về en. `subject_variables` liệt kê 14
+                             biến macro — phải khớp đúng tập macro trong
+                             Periodictask#parse_macro.
 
 app/models/
   periodictask.rb            Model chính. Cấu hình chu kỳ + sinh issue.
@@ -162,6 +164,13 @@ cộng bù được.
 - **`db/**/*` bị exclude khỏi rubocop** — migration cũ vẫn dùng hash rocket.
 - **redmine_checklists là tuỳ chọn.** Mọi truy cập `ChecklistTemplate` phải bọc
   `checklist_plugin_installed?`.
+- **Macro ngày tháng: mốc thời gian phải đi thành cặp.** `**YEAR**` luôn là năm
+  của thời điểm chạy, nên ghép nó với `**PREVIOUS_MONTH**` sẽ sai một năm vào
+  tháng 1, và với `**NEXT_MONTH**` sẽ sai vào tháng 12. Dùng đúng bạn đồng hành:
+  `**PREVIOUS_MONTH_YEAR**`, `**NEXT_MONTH_YEAR**`, `**NEXT_WEEK_YEAR**`.
+  `**NEXT_WEEK**` dùng `%W` (theo năm dương lịch) nên đi với `%Y`; nếu sau này
+  thêm biến ISO cho tuần thì bạn đồng hành phải là ISO-year `%G`, không phải
+  `%Y`. Thêm macro mới → cập nhật `subject_variables` ở **cả 13** locale.
 
 ## Lệnh
 
